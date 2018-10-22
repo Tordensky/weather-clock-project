@@ -24,11 +24,3 @@ exports.listDevices =  listDevices;
 exports.pingDevice = pingDevice;
 exports.initDevice = initDevice;
 exports.showIcon = showIcon;
-
-
-listDevices().then(r => {
-    console.log(r);
-    r.forEach(d => pingDevice(d.id));
-    r.forEach(d => showIcon(d.id, 5));
-    r.forEach(d => initDevice(d.id));
-});
