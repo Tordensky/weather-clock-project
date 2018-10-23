@@ -203,7 +203,7 @@ int ping(String command) {
     stepper.setAcceleration(500);
     for (int i = 0; i < 2; i += 1) {
         stepper.runToNewPosition(-(currentPosition + 100));
-        stepper.runToNewPosition(-(currentPosition - 200));
+        stepper.runToNewPosition(-(currentPosition - 100));
     }
     stepper.runToNewPosition(-(currentPosition));
     stepper.setAcceleration(ACCELERATION_SPEED);

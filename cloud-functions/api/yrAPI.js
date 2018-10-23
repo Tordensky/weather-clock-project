@@ -1,8 +1,11 @@
 const http = require("http");
 const parser = require('xml2json');
 const agent = new http.Agent({keepAlive: true});
-const parseYrForecast = require('./parser').parseYrForecat;
+const parseYrForecast = require('../utils/parser').parseYrForecat;
 
+/**
+ * Retrieve the current weather from a yr location
+ * */
 function currentWeather(path = '/sted/Norge/Oslo/Oslo/Oslo/varsel.xml') {
     return new Promise((resolve, reject) => {
         const req = http.request({

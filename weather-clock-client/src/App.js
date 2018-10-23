@@ -16,6 +16,11 @@ class App extends Component {
         }
     }
     componentWillMount() {
+        fetch('https://us-central1-weather-clock-200715.cloudfunctions.net/getAllParticles').then(res => {
+            this.setState({ registeredDevises: res.body });
+        });
+
+
         particle.listDevices({ auth: token }).then(res => this.setState({ devices: res.body }));
     }
 
