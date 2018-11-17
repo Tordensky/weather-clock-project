@@ -5,6 +5,7 @@
   "dependencies": {
     "particle-api-js": "^7.2.3",
     "react": "^16.5.2",
+    "react-autocomplete": "^1.8.1",
     "react-dom": "^16.5.2",
     "react-scripts": "2.0.4"
   },

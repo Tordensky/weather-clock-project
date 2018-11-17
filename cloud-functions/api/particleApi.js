@@ -32,7 +32,15 @@ function showIcon(deviceId, iconNumber) {
     return particle.callFunction({deviceId: deviceId, name: 'goto', auth: token, argument: ''+iconNumber });
 }
 
+/**
+ * Goto a given icon on weather clock
+ * */
+function updateWeather(deviceId) {
+    return particle.callFunction({ deviceId: deviceId, name: 'getWeather', auth: token });
+}
+
 exports.listDevices =  listDevices;
 exports.pingDevice = pingDevice;
 exports.initDevice = initDevice;
 exports.showIcon = showIcon;
+exports.updateWeather = updateWeather;

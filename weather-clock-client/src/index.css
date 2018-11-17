@@ -12,3 +12,16 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+
+.particle-container {
+  margin: 0 auto;
+  width: 500px;
+}
+
+.particle {
+  background-color: pink;
+  width: 500px;
+  margin-bottom: 10px;
+  padding: 20px;
+}
