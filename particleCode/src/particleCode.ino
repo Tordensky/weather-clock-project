@@ -1,5 +1,6 @@
 #include <AccelStepper.h>
 #include <ArduinoJson.h>
+#include <Adafruit_DHT.h>
 
 //  IKONER
 const int UKJENT_TILSTAND     = -1;
@@ -31,8 +32,16 @@ int STEPS_PER_ROTATION = 2024;
 int MAX_SPEED = 300.0;
 int ACCELERATION_SPEED = 60;
 
+// DHT SENSOR
+#define DHTPIN 5
+#define DHTTYPE DHT22
+
+double tempCelcius = 0.0;
+double humidity = 0.0;
+DHT dht(DHTPIN, DHTTYPE);
+
 // HOME BUTTON
-int buttonPin = D5;
+int buttonPin = D0;
 int HOME_OFFSETT = -50;
 
 // STATES
@@ -49,6 +58,7 @@ void setup() {
     Particle.function("rerunInit", rerunInit);
     Particle.function("goto", gotoIcon);
     Particle.function("getWeather", getWeather);
+    Particle.function("doMeasure", doMeasure);
 
     stepper.setMaxSpeed(MAX_SPEED);
     stepper.setSpeed(MAX_SPEED);
@@ -56,6 +66,10 @@ void setup() {
 
 
     Particle.variable("currentIcon", currentIcon);
+
+    Particle.variable("temp", tempCelcius);
+    Particle.variable("humidity", humidity);
+	dht.begin();
 
     // Subscribe to the integration response event
     //Particle.subscribe("hook-response/GetWeatherData", myHandler, MY_DEVICES);
@@ -106,6 +120,7 @@ void loop() {
             String deviceID = System.deviceID();
             Particle.publish("GetWeatherData", deviceID, PRIVATE);
             waitMillis = millis() + 240000;
+            doMeasure("");
         }
     }
 
@@ -195,6 +210,21 @@ int getWeather(String command) {
     String deviceID = System.deviceID();
     Particle.publish("GetWeatherData", deviceID, PRIVATE);
     return 0;
+}
+
+int doMeasure(String command) {
+    float t = dht.getTempCelcius();
+    float h = dht.getHumidity();
+    if (!isnan(h) && !isnan(t)) {
+        tempCelcius = t;
+        humidity = h;
+        char eventData[64];
+        sprintf(eventData, "Temp: %.2f c, %.2f /%", t, h);
+        Particle.publish("Reading", eventData);
+        return 0;
+    }
+
+    return -1;
 }
 
 int ping(String command) {
