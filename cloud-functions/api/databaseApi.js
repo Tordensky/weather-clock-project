@@ -8,6 +8,8 @@ firebase.initializeApp({
 
 const db = firebase.database();
 
+const mapTolist = res => Object.keys(res.val()).map(k => res.val()[k]);
+
 /**
  * Register new device
  * */
@@ -58,10 +60,32 @@ exports.changeDeviceLocation = changeDeviceLocation;
  * Get all devices
 * */
 function getAllDevices() {
-    return db.ref('devices').once('value').then(res => Object.keys(res.val()).map(k => res.val()[k]))
+    return db.ref('devices').once('value').then(mapTolist)
 }
 exports.getAllDevices = getAllDevices;
 
+/**
+ * Log temp, humidity and weather data
+ * */
+function logData(deviceId, timestamp, temp, humidity, weatherData = {}) {
+    return db.ref(`sensorData/${deviceId}`).push({
+        timestamp,
+        temp,
+        humidity,
+        weatherData,
+    })
+}
+exports.logData = logData;
+
+
+/**
+ * Get all log entries for device
+ * */
+function getLogData(deviceId) {
+    return db.ref(`sensorData/${deviceId}`)
+        .once('value').then(mapTolist);
+}
+exports.getLogData = getLogData;
 
 
 // addDevice('2f0022000947343432313031', 'TORDENSKY', '/sted/Norge/Rogaland/Stavanger/Austbø/varsel.xml');

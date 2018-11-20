@@ -7,11 +7,21 @@ const databaseApi = require('../api/databaseApi');
  * */
 const getYrDataFn = (request, response) => {
     const deviceId = request.query.coreid;
+
     databaseApi.getDevice(deviceId).then(device => {
         const weatherLocation = device.location || '/sted/Norge/Oslo/Oslo/Oslo/varsel.xml';
         console.log('Got a call from ' + device.name + ' : ' + deviceId + ' at location ' + weatherLocation);
         currentWeather(weatherLocation)
             .then((res) => {
+                if (request.query.data) {
+                    try {
+                        const { temp, humidity } = JSON.parse(request.query.data);
+                        databaseApi.logData(deviceId, request.query.published_at, temp, humidity, res);
+                    } catch (e) {
+                        console.error('Failed to parse sensor data', request.query);
+                    }
+                }
+
                 particleApi.showIcon(deviceId, res.icon);
                 response.status(200).send(res);
             })

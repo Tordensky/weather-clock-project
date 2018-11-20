@@ -111,20 +111,29 @@ void loop() {
             gotoIcon("1");
             //testAllIkons();
             currentMode = MODE_READY;
+        } else if (stepper.distanceToGo() == 0) {
+            stepper.disableOutputs();
         }
     } else {
         // Trigger the integration
         if (waitMillis < millis()) {
-            // Get some data
-            String data = String(10);
-            String deviceID = System.deviceID();
-            Particle.publish("GetWeatherData", deviceID, PRIVATE);
+            getWeatherInternal();
             waitMillis = millis() + 240000;
-            doMeasure("");
         }
     }
 
     stepper.run();
+}
+
+void getWeatherInternal() {
+    int res = doMeasure("");
+    if (res == 0) {
+        char eventData[64];
+        sprintf(eventData, "{\"temp\": %.2f, \"humidity\": %.2f}", tempCelcius, humidity);
+        Particle.publish("GetWeatherData", eventData, PRIVATE);
+    } else {
+        Particle.publish("GetWeatherData", "", PRIVATE);
+    }
 }
 
 void testAllIkons() {
@@ -207,8 +216,7 @@ int rerunInit(String command) {
 }
 
 int getWeather(String command) {
-    String deviceID = System.deviceID();
-    Particle.publish("GetWeatherData", deviceID, PRIVATE);
+    getWeatherInternal();
     return 0;
 }
 
@@ -219,7 +227,7 @@ int doMeasure(String command) {
         tempCelcius = t;
         humidity = h;
         char eventData[64];
-        sprintf(eventData, "Temp: %.2f c, %.2f /%", t, h);
+        sprintf(eventData, "{\"temp\": %.2f, \"humidity\": %.2f}", tempCelcius, humidity);
         Particle.publish("Reading", eventData);
         return 0;
     }
