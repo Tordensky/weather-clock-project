@@ -5,6 +5,9 @@ const currentWeather = require('../api/yrAPI').currentWeather;
  * Cloud function for retrieving data for all weather clocks
  * */
 function getAllParticles(request, response) {
+    response.header('Content-Type','application/json');
+    response.header('Access-Control-Allow-Origin', '*');
+    response.header('Access-Control-Allow-Headers', 'Content-Type');
     databaseApi.getAllDevices()
         .then((devices) => {
             Promise.all(devices.map(device => currentWeather(device.location)))

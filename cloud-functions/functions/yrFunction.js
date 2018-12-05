@@ -8,6 +8,9 @@ const databaseApi = require('../api/databaseApi');
 const getYrDataFn = (request, response) => {
     const deviceId = request.query.coreid;
 
+    response.header('Content-Type','application/json');
+    response.header('Access-Control-Allow-Origin', '*');
+    response.header('Access-Control-Allow-Headers', 'Content-Type');
     databaseApi.getDevice(deviceId).then(device => {
         const weatherLocation = device.location || '/sted/Norge/Oslo/Oslo/Oslo/varsel.xml';
         console.log('Got a call from ' + device.name + ' : ' + deviceId + ' at location ' + weatherLocation);

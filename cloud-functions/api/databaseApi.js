@@ -8,7 +8,7 @@ firebase.initializeApp({
 
 const db = firebase.database();
 
-const mapTolist = res => Object.keys(res.val()).map(k => res.val()[k]);
+const mapTolist = res => Object.keys(res.val() || {}).map(k => res.val()[k]);
 
 /**
  * Register new device
@@ -79,11 +79,19 @@ exports.logData = logData;
 
 
 /**
- * Get all log entries for device
+ * Get log entries for device
  * */
-function getLogData(deviceId) {
+function getLogData(deviceId, limitToLast = 100) {
+    if (!deviceId) {
+        return new Promise(resolve => {
+            resolve([]);
+        })
+    }
+
     return db.ref(`sensorData/${deviceId}`)
-        .once('value').then(mapTolist);
+        .limitToLast(limitToLast)
+        .once('value')
+        .then(mapTolist);
 }
 exports.getLogData = getLogData;
 
@@ -101,3 +109,5 @@ exports.getLogData = getLogData;
 //getAllDevices().then(k => console.log(k));
 
 //getDeviceByName('NORDKAPP').then(v => console.log(v));
+
+getLogData('4').then(r => console.log(r));

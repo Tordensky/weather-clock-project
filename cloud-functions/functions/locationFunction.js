@@ -4,8 +4,8 @@ const locationApi = require('../api/locationAPI');
  * Cloud function for location search
  * */
 function findLocation(request, response) {
-    const deviceId = request.query.search || '';
-    const result = locationApi.findLocation(deviceId);
+    const query = request.query.search || '';
+    const result = locationApi.findLocation(query);
 
     response.header('Content-Type','application/json');
     response.header('Access-Control-Allow-Origin', '*');

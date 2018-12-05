@@ -16,12 +16,31 @@ code {
 
 .particle-container {
   margin: 0 auto;
-  width: 500px;
+
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: wrap;
 }
 
 .particle {
-  background-color: pink;
-  width: 500px;
-  margin-bottom: 10px;
+  background-color: rgba(124, 212, 255, 0.94);
+  width: 300px;
+  margin: 10px;
   padding: 20px;
+}
+
+.particle-header {
+  font-size: 30px;
+  margin-bottom: 10px;
+}
+
+.particle-weather {
+}
+
+.particle-weather--location {
+  font-size: 18px;
+}
+
+.particle-weather--data {
+  font-size: 28px;
 }
